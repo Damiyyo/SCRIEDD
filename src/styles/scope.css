@@ -1,0 +1,9 @@
+/* Page wrappers used to scope the page-specific stylesheets (home, about, partner, sessions, stories).
+   They add no box of their own, so layout is identical to the original one-page-per-file site. */
+.pg-home,
+.pg-about,
+.pg-partner,
+.pg-sessions,
+.pg-stories {
+  display: contents;
+}

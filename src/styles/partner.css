@@ -1,0 +1,29 @@
+/* partner page */
+:where(.pg-partner) .paths{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--forest)}
+:where(.pg-partner) .path{padding:40px 36px 44px 0;border-right:1px solid var(--line);display:flex;flex-direction:column}
+:where(.pg-partner) .path + .path{padding-left:36px}
+:where(.pg-partner) .path:last-child{border-right:0}
+:where(.pg-partner) .path-for{font-weight:600;color:var(--forest);margin-bottom:14px}
+:where(.pg-partner) .path h3{font-size:clamp(1.7rem,2.6vw,2.2rem);margin-bottom:14px}
+:where(.pg-partner) .path > p{color:var(--muted);margin-bottom:22px}
+:where(.pg-partner) .path ul{list-style:none;margin-bottom:28px;flex:1}
+:where(.pg-partner) .path li{padding:12px 0 12px 30px;border-top:1px solid var(--line);position:relative}
+:where(.pg-partner) .path li::before{content:"";position:absolute;left:0;top:19px;width:14px;height:14px;border-radius:50%;background:var(--gold)}
+:where(.pg-partner) .path a.btn{align-self:flex-start}
+
+:where(.pg-partner) .split .wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:64px;align-items:start}
+:where(.pg-partner) .split .lead + .lead{margin-top:14px}
+:where(.pg-partner) .checklist{list-style:none;margin-top:32px}
+:where(.pg-partner) .checklist li{padding:14px 0;border-top:1px solid var(--line)}
+:where(.pg-partner) .checklist b{display:block}
+:where(.pg-partner) .checklist span{color:var(--muted);font-size:.98rem}
+:where(.pg-partner) .band-forest .checklist li{border-color:rgba(255,255,255,.14)}
+:where(.pg-partner) .band-forest .checklist span{color:var(--mist)}
+:where(.pg-partner) .form-note{font-weight:600;min-height:1.6em;color:var(--forest)}
+:where(.pg-partner) .band-forest .form-note{color:var(--gold)}
+:where(.pg-partner) .form .btn{justify-self:start}
+
+@media (max-width:960px){
+  :where(.pg-partner) .paths,:where(.pg-partner) .split .wrap{grid-template-columns:1fr}
+  :where(.pg-partner) .path,:where(.pg-partner) .path + .path{padding:36px 0;border-right:0;border-bottom:1px solid var(--line)}
+}

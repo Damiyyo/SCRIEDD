@@ -1,4 +1,5 @@
 import Chrome from "@/components/Chrome";
+import Splash from "@/components/Splash";
 // Order matters: shared styles first, then the (scoped) page styles, as each page loaded them in the original.
 import "@/styles/site.css";
 import "@/styles/app.css";
@@ -8,6 +9,7 @@ import "@/styles/about.css";
 import "@/styles/partner.css";
 import "@/styles/sessions.css";
 import "@/styles/stories.css";
+import "@/styles/splash.css";
 export const metadata = {
   title: "Scried: Something is possible here",
   description: "Scried brings opportunities closer to Nigerian students, and brings Nigerian students to the world."
@@ -25,6 +27,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
+        <Splash />
         <Chrome>{children}</Chrome>
       </body>
     </html>

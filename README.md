@@ -77,4 +77,3 @@ Same as before: contact email / WhatsApp, schools, opportunities, sessions and t
 
 - **Streak:** consecutive days with at least one activity (exploring an opportunity, applying, completing, or reading a story). It counts today or yesterday, so the streak only breaks after a full missed day.
 - **School score:** registrations + 2 × completions + 3 × verified certificates. **Percentile** is the share of other schools with a lower score.
-# SCRIEDD

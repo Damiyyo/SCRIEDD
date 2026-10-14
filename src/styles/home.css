@@ -10,7 +10,15 @@
   linear-gradient(90deg,rgba(11,51,38,.94) 0%,rgba(11,51,38,.72) 45%,rgba(11,51,38,.2) 100%),
   linear-gradient(0deg,rgba(11,51,38,.9) 0%,rgba(11,51,38,0) 45%)}
 :where(.pg-home) .hero .wrap{position:relative;z-index:2;width:100%}
-:where(.pg-home) .hero h1{font-size:clamp(3.4rem,8.4vw,7.6rem);font-weight:800;max-width:10ch}
+:where(.pg-home) .hero h1 {
+  font-size: clamp(2.8rem, 8.4vw, 7.6rem);
+  font-weight: 800;
+  max-width: 10ch;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
 :where(.pg-home) .hero-sub{font-size:1.3rem;color:#DCE8E2;margin:28px 0 40px;max-width:32ch}
 :where(.pg-home) .future{position:absolute;z-index:2;right:28px;bottom:110px;display:flex;flex-direction:column;align-items:flex-end;gap:14px}
 :where(.pg-home) .future-tag{background:rgba(11,51,38,.7);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);padding:10px 18px;border-radius:999px;font-weight:600}
@@ -117,4 +125,26 @@
 }
 @media (prefers-reduced-motion:reduce){
   :where(.pg-home) .marquee{flex-wrap:wrap;width:auto}
+
+  :where(.pg-home) .hero h1 {
+    font-size: clamp(2.5rem, 10vw, 3.8rem);
+    max-width: 100%;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    overflow-wrap: normal;
+  }
+  
+  :where(.pg-home) .hero .wrap {
+    width: 100%;
+    min-width: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+  
+  :where(.pg-home) .hero-sub {
+    font-size: 1.05rem;
+    max-width: 32ch;
+    overflow-wrap: break-word;
+  }
 }

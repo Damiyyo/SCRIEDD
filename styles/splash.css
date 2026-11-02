@@ -1,0 +1,11 @@
+/* Opening animation: blank page, "scried." breathes in for 3.5s, then fades out. */
+.splash{position:fixed;inset:0;z-index:1000;background:var(--forest);display:grid;place-items:center;opacity:1;transition:opacity .6s ease;
+  /* safety net: if scripts ever fail to load, still get out of the way */
+  animation:splash-failsafe .01s 7s forwards}
+.splash.out{opacity:0;pointer-events:none}
+.splash-logo{font:800 clamp(3.2rem,12vw,7rem) var(--display);letter-spacing:-.04em;color:#fff;
+  animation:splash-breathe 3.5s cubic-bezier(.45,.05,.35,1) both;will-change:transform,opacity}
+.splash-logo i{font-style:normal;color:var(--gold)}
+@keyframes splash-breathe{from{opacity:.25;transform:scale(.88)}to{opacity:1;transform:scale(1.06)}}
+@keyframes splash-failsafe{to{visibility:hidden;pointer-events:none}}
+html.splashing{overflow:hidden}

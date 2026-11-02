@@ -80,7 +80,7 @@ export default function AdminPage() {
         {!session ? (
           <section className="admin-login-card" aria-labelledby="admin-login-title">
             <div className="admin-mark">S</div>
-            <p className="admin-eyebrow">Private workspace</p>
+            <p className="admin-eyebrow"></p>
             <h1 id="admin-login-title">Admin sign in</h1>
             <p className="admin-intro">Scried administrator account to manage the consent documents.</p>
             <form className="admin-form" onSubmit={signIn}>

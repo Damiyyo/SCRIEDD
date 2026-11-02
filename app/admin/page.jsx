@@ -82,14 +82,14 @@ export default function AdminPage() {
             <div className="admin-mark">S</div>
             <p className="admin-eyebrow">Private workspace</p>
             <h1 id="admin-login-title">Admin sign in</h1>
-            <p className="admin-intro">Use your Scried administrator account to manage the consent documents shown to applicants.</p>
+            <p className="admin-intro">Scried administrator account to manage the consent documents.</p>
             <form className="admin-form" onSubmit={signIn}>
               <label>Email<input type="email" value={credentials.email} onChange={(event) => setCredentials({ ...credentials, email: event.target.value })} autoComplete="username" required /></label>
               <label>Password<input type="password" value={credentials.password} onChange={(event) => setCredentials({ ...credentials, password: event.target.value })} autoComplete="current-password" required /></label>
               {status && <p className={`admin-status ${status.type}`} role="alert">{status.text}</p>}
               <button className="admin-button" type="submit" disabled={busy}>{busy ? "Signing in..." : "Sign in to admin"}</button>
             </form>
-            <p className="admin-footnote">This is separate from the public user sign-in and does not expose admin credentials in the frontend.</p>
+            <p className="admin-footnote"></p>
           </section>
         ) : (
           <>
@@ -98,9 +98,9 @@ export default function AdminPage() {
             </header>
             <div className="admin-grid">
               <section className="admin-panel">
-                <div className="admin-panel-kicker">Versioned publishing</div>
-                <h2>Make a consent version active</h2>
-                <p className="admin-muted">The API stores these texts as an immutable version. Do not use draft or unapproved wording here.</p>
+                <div className="admin-panel-kicker">Publish</div>
+                <h2>Make your consent version active</h2>
+                <p className="admin-muted">These messages are stored as an immutable version, therefore cannot be edited after publishing. Please do not use a drafted or unapproved wording here.</p>
                 <form className="admin-form" onSubmit={publish}>
                   <label>Version<input value={document.version} onChange={(event) => setDocument({ ...document, version: event.target.value })} placeholder="1.1" required /></label>
                   <label>Privacy notice<textarea value={document.privacy} onChange={(event) => setDocument({ ...document, privacy: event.target.value })} placeholder="Paste the approved privacy notice..." minLength={20} required /></label>

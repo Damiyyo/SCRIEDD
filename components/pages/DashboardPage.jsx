@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+
 import { useRequireUser } from "@/lib/hooks";
 import { Store } from "@/lib/store";
 import { alertBox, first, flash, flashNow, fmtDate, openCertificate } from "@/lib/ui";
@@ -9,17 +9,6 @@ const MILESTONES = [3, 7, 14, 30, 60, 100];
 export default function DashboardPage() {
   const u = useRequireUser();
   const router = useRouter();
-  const [showWelcome, setShowWelcome] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || new URLSearchParams(window.location.search).get("welcome") !== "1") return;
-    const alreadyShown = sessionStorage.getItem("scried.welcomeShown");
-    if (!alreadyShown) {
-      sessionStorage.setItem("scried.welcomeShown", "1");
-      setShowWelcome(true);
-      window.history.replaceState(null, "", "/dashboard");
-    }
-  }, []);
   const toggle = async (a, back, e) => {
     const t = e.target;
     t.disabled = true;
@@ -73,17 +62,6 @@ export default function DashboardPage() {
     .slice(0, 4);
   return (
     <>
-      {showWelcome ? (
-        <div className="welcome-overlay" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
-          <div className="welcome-card">
-            <div className="welcome-orb" aria-hidden="true">S</div>
-            <p className="eyebrow">You&apos;re in</p>
-            <h2 id="welcome-title">Welcome to Scried.</h2>
-            <p>Let&apos;s get started. Explore an opportunity, complete your profile, and build a record you can be proud of.</p>
-            <button className="btn btn-forest" type="button" onClick={() => setShowWelcome(false)}>Let&apos;s get started</button>
-          </div>
-        </div>
-      ) : null}
       <header className="dash-head">
         <div className="wrap">
           <div>

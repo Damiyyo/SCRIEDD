@@ -29,6 +29,12 @@ function tokenFrom(result) {
   };
 }
 
+function normalizeUser(result) {
+  const value = result?.data || result;
+  if (!value) return null;
+  return { ...value, isStaff: value.isStaff ?? value.is_staff ?? (value.role === "staff" || value.role === "admin") };
+}
+
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
@@ -80,8 +86,9 @@ export function AuthProvider({ children }) {
     if (!tokens.accessToken) throw new Error("The API did not return an access token.");
     saveTokens(tokens);
     const current = await backendRequest("/auth/me", { headers: { Authorization: `Bearer ${tokens.accessToken}` } });
-    setUser(current?.data || current);
-    return current?.data || current;
+    const normalized = normalizeUser(current);
+    setUser(normalized);
+    return normalized;
   }, [saveTokens]);
 
   const signOut = useCallback(async () => {
@@ -101,7 +108,7 @@ export function AuthProvider({ children }) {
       setSession(stored);
       try {
         const current = await backendRequest("/auth/me", { headers: { Authorization: `Bearer ${stored.accessToken}` } });
-        if (!cancelled) setUser(current?.data || current);
+        if (!cancelled) setUser(normalizeUser(current));
       } catch {
         if (!cancelled) clearSession();
       } finally {

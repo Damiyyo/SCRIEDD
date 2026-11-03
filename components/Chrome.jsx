@@ -81,10 +81,24 @@ export default function Chrome({ children }) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
   const page = pageKey(pathname);
   const u = authUser || (ready ? Store.currentUser() : null);
   const cur = (p) => (p === page ? "page" : undefined);
   useEffect(() => setOpen(false), [pathname]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      const movingDown = currentY > lastScrollY.current;
+      if (currentY < 24 || !movingDown) setNavVisible(true);
+      else if (currentY > lastScrollY.current + 4) setNavVisible(false);
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const isAdminRoute = pathname?.replace(/\/+$/, "") === "/admin";
   if (isAdminRoute) return children;
@@ -144,16 +158,11 @@ export default function Chrome({ children }) {
       <a className="skip" href="#main">
         Skip to content
       </a>
-      <nav className="nav solid" aria-label="Main">
+      <nav className={`nav solid${navVisible ? "" : " nav-hidden"}`} aria-label="Main">
         <div className="wrap">
           <Link href="/" className="logo" aria-label="Scried home">
             scried<i>.</i>
           </Link>
-          <button className="menu-btn" aria-expanded={open} aria-controls="nav-links" aria-label="Menu" onClick={() => setOpen((o) => !o)}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
-          </button>
           <ul className={"nav-links" + (open ? " open" : "")} id="nav-links">
             <li>
               <Link href="/opportunities" aria-current={cur("opportunities")}>
@@ -177,7 +186,7 @@ export default function Chrome({ children }) {
             </li>
             {account}
           </ul>
-          <button className="nav-profile" type="button" aria-label="Open navigation menu" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
+          <button className={`nav-profile${open ? " is-open" : ""}`} type="button" aria-label="Open navigation menu" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
             <span>S</span><b aria-hidden="true">‹</b>
           </button>
         </div>

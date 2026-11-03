@@ -1,61 +1,13 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Field, FormError, useFormErrors } from "@/components/Forms";
-import { useStore } from "@/lib/hooks";
-import { Store } from "@/lib/store";
-import { flash, formData } from "@/lib/ui";
+import { backendRequest } from "@/lib/backend";
+import { formData } from "@/lib/ui";
+
 export default function ForgotPage() {
-  const { ready } = useStore();
-  const router = useRouter();
   const { errors, setErrors, formRef } = useFormErrors();
-  return (
-    <main id="main" className="auth">
-      <aside className="auth-side">
-        <div>
-          <h1>Locked out? It happens.</h1>
-          <p>Set a new password for your account.</p>
-        </div>
-      </aside>
-      <section className="auth-main">
-        <h2>Reset your password</h2>
-        <p className="sub">
-          In this prototype you can set a new password straight away. Once Scried is connected to a server, this page will email a reset link instead.
-        </p>
-        {ready ? (
-          <form
-            className="form"
-            id="form"
-            noValidate
-            ref={formRef}
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const d = formData(e.currentTarget);
-              const res = await Store.resetPassword(d.email, d.password);
-              if (res.error) {
-                setErrors({ form: res.error });
-                return;
-              }
-              flash("Password changed. Sign in with your new password.");
-              router.push("/signin");
-            }}
-          >
-            <FormError message={errors.form} />
-            <div id="fields">
-              <Field name="email" label="Email" type="email" />
-              <Field name="password" label="New password" type="password" help="At least 8 characters." />
-            </div>
-            <button className="btn btn-forest" type="submit" style={{ justifySelf: "start" }}>
-              Save new password
-            </button>
-            <p className="auth-alt">
-              <Link href="/signin">Back to sign in</Link>
-            </p>
-          </form>
-        ) : (
-          <form className="form" id="form" noValidate />
-        )}
-      </section>
-    </main>
-  );
+  const [busy, setBusy] = useState(false);
+  const [sent, setSent] = useState(false);
+  return <main id="main" className="auth"><aside className="auth-side"><div><h1>Locked out? It happens.</h1><p>Request a secure reset link for your Scried account.</p></div></aside><section className="auth-main"><h2>Reset your password</h2><p className="sub">Enter your account email and we&apos;ll send reset instructions if the account exists.</p>{sent ? <div className="admin-status success" role="status">If an account exists for that email, a password-reset link has been sent. Check your inbox and follow the link to finish resetting your password.</div> : <form className="form" noValidate ref={formRef} onSubmit={async (event) => { event.preventDefault(); setBusy(true); setErrors({}); try { await backendRequest("/auth/request-password-reset", { method: "POST", body: JSON.stringify({ email: formData(event.currentTarget).email }) }); setSent(true); } catch (error) { setErrors({ form: error.message || "Unable to request a reset link." }); } finally { setBusy(false); } }}><FormError message={errors.form} /><Field name="email" label="Email" type="email" autoComplete="email" autoFocus error={errors.email} /><button className="btn btn-forest" type="submit" disabled={busy} style={{ justifySelf: "start" }}>{busy ? "Sending..." : "Send reset link"}</button><p className="auth-alt"><Link href="/signin">Back to sign in</Link></p></form>}</section></main>;
 }

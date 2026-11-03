@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { SCRIED_CONFIG as C } from "@/data/content";
 import { useStore } from "@/lib/hooks";
 import { Store } from "@/lib/store";
+import { useAuth } from "@/lib/auth-context";
 import { FLASH_EVENT, flash } from "@/lib/ui";
 /** Which nav item is "current" for a given route (mirrors the `page` option of the original renderChrome). */
 function pageKey(pathname) {
@@ -76,18 +77,20 @@ function FlashBox() {
 }
 export default function Chrome({ children }) {
   const { ready } = useStore();
+  const { user: authUser, signOut: authSignOut } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const page = pageKey(pathname);
-  const u = ready ? Store.currentUser() : null;
+  const u = authUser || (ready ? Store.currentUser() : null);
   const cur = (p) => (p === page ? "page" : undefined);
   useEffect(() => setOpen(false), [pathname]);
 
   const isAdminRoute = pathname?.replace(/\/+$/, "") === "/admin";
   if (isAdminRoute) return children;
 
-  const signOut = () => {
+  const signOut = async () => {
+    await authSignOut();
     Store.signOut();
     flash("You're signed out.");
     router.push("/");

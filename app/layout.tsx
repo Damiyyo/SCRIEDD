@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import Chrome from '@/components/Chrome'
 import Splash from '@/components/Splash'
+import { AuthProvider } from '@/lib/auth-context'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -29,8 +30,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Splash />
-        <Chrome>{children}</Chrome>
+        <AuthProvider>
+          <Splash />
+          <Chrome>{children}</Chrome>
+        </AuthProvider>
       </body>
     </html>
   )

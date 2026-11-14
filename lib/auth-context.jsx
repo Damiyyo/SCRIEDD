@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { backendRequest } from "@/lib/backend";
+import { Store } from "@/lib/store";
 
 const STORAGE_KEY = "scried.auth";
 const AuthContext = createContext(null);
@@ -32,7 +33,24 @@ function tokenFrom(result) {
 function normalizeUser(result) {
   const value = result?.data || result;
   if (!value) return null;
-  return { ...value, isStaff: value.isStaff ?? value.is_staff ?? (value.role === "staff" || value.role === "admin") };
+  const profile = value.profile || {};
+  return {
+    ...value,
+    fullName: value.fullName || value.full_name,
+    school: profile.school_name || value.school,
+    course: profile.course || value.course,
+    level: profile.level || value.level,
+    isStaff: value.isStaff ?? value.is_staff ?? (value.role === "staff" || value.role === "admin" || value.roles?.some((role) => role === "staff" || role === "admin")),
+  };
+}
+
+function recordLoginActivity(user) {
+  if (!user || user.isStaff) return;
+  try {
+    Store.logActivityForUser(user.id, "login");
+  } catch {
+    // Activity tracking should never block account sign-in.
+  }
 }
 
 export function AuthProvider({ children }) {
@@ -53,14 +71,14 @@ export function AuthProvider({ children }) {
     return next;
   }, []);
 
-  const refresh = useCallback(async (refreshToken = session?.refreshToken) => {
+  const refresh = useCallback(async (refreshToken) => {
     if (!refreshToken) throw new Error("Your session has expired. Please sign in again.");
     const result = await backendRequest("/auth/refresh", {
       method: "POST",
       body: JSON.stringify({ refresh_token: refreshToken }),
     });
     return saveTokens({ ...tokenFrom(result), refreshToken: tokenFrom(result).refreshToken || refreshToken });
-  }, [saveTokens, session?.refreshToken]);
+  }, [saveTokens]);
 
   const authenticatedRequest = useCallback(async (path, options = {}) => {
     const active = session || readSession();
@@ -80,6 +98,13 @@ export function AuthProvider({ children }) {
     }
   }, [refresh, session]);
 
+  const refreshUser = useCallback(async () => {
+    const current = await authenticatedRequest("/auth/me");
+    const normalized = normalizeUser(current);
+    setUser(normalized);
+    return normalized;
+  }, [authenticatedRequest]);
+
   const signIn = useCallback(async (credentials) => {
     const result = await backendRequest("/auth/login", { method: "POST", body: JSON.stringify(credentials) });
     const tokens = tokenFrom(result);
@@ -88,6 +113,7 @@ export function AuthProvider({ children }) {
     const current = await backendRequest("/auth/me", { headers: { Authorization: `Bearer ${tokens.accessToken}` } });
     const normalized = normalizeUser(current);
     setUser(normalized);
+    recordLoginActivity(normalized);
     return normalized;
   }, [saveTokens]);
 
@@ -107,8 +133,20 @@ export function AuthProvider({ children }) {
       if (!stored?.accessToken) return setReady(true);
       setSession(stored);
       try {
-        const current = await backendRequest("/auth/me", { headers: { Authorization: `Bearer ${stored.accessToken}` } });
-        if (!cancelled) setUser(normalizeUser(current));
+        let active = stored;
+        let current;
+        try {
+          current = await backendRequest("/auth/me", { headers: { Authorization: `Bearer ${active.accessToken}` } });
+        } catch (error) {
+          if (error.status !== 401 || !active.refreshToken) throw error;
+          active = await refresh(active.refreshToken);
+          current = await backendRequest("/auth/me", { headers: { Authorization: `Bearer ${active.accessToken}` } });
+        }
+        if (!cancelled) {
+          const normalized = normalizeUser(current);
+          setUser(normalized);
+          recordLoginActivity(normalized);
+        }
       } catch {
         if (!cancelled) clearSession();
       } finally {
@@ -117,9 +155,9 @@ export function AuthProvider({ children }) {
     }
     hydrate();
     return () => { cancelled = true; };
-  }, [clearSession]);
+  }, [clearSession, refresh]);
 
-  const value = useMemo(() => ({ user, session, ready, isAuthenticated: Boolean(session?.accessToken), signIn, signOut, refresh, authenticatedRequest, clearSession }), [user, session, ready, signIn, signOut, refresh, authenticatedRequest, clearSession]);
+  const value = useMemo(() => ({ user, session, ready, isAuthenticated: Boolean(session?.accessToken), signIn, signOut, refresh, authenticatedRequest, refreshUser, clearSession }), [user, session, ready, signIn, signOut, refresh, authenticatedRequest, refreshUser, clearSession]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

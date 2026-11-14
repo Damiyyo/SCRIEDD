@@ -60,13 +60,14 @@ export function Field({
   autoComplete,
   autoFocus,
   disabled,
-  inputProps
+  inputProps,
+  required = false
 }) {
   const id = prefix + name;
   let input;
   if (options)
     input = (
-      <select id={id} name={name} defaultValue={value} autoComplete={autoComplete} disabled={disabled}>
+      <select id={id} name={name} defaultValue={value} autoComplete={autoComplete} disabled={disabled} required={required}>
         {placeholder && <option value="">{placeholder}</option>}
         {options.map(([v, l]) => (
           <option key={v} value={v}>
@@ -75,7 +76,7 @@ export function Field({
         ))}
       </select>
     );
-  else if (type === "textarea") input = <textarea id={id} name={name} rows={3} defaultValue={value} placeholder={placeholder} />;
+  else if (type === "textarea") input = <textarea id={id} name={name} rows={3} defaultValue={value} placeholder={placeholder} required={required} />;
   else
     input = (
       <input
@@ -87,6 +88,7 @@ export function Field({
         autoComplete={autoComplete}
         autoFocus={autoFocus}
         disabled={disabled}
+        required={required}
         {...inputProps}
       />
     );

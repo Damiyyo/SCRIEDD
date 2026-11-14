@@ -6,7 +6,7 @@ import { SCRIED_CONFIG as C } from "@/data/content";
 import { useStore } from "@/lib/hooks";
 import { Store } from "@/lib/store";
 import { useAuth } from "@/lib/auth-context";
-import { FLASH_EVENT, flash } from "@/lib/ui";
+import { FLASH_EVENT } from "@/lib/ui";
 /** Which nav item is "current" for a given route (mirrors the `page` option of the original renderChrome). */
 function pageKey(pathname) {
   if (pathname === "/") return "home";
@@ -15,8 +15,11 @@ function pageKey(pathname) {
     case "opportunities":
       return "opportunities";
     case "sessions":
+      return "programs";
     case "stories":
+      return "blogs";
     case "partner":
+      return "partner";
     case "about":
     case "privacy":
     case "join":
@@ -76,7 +79,7 @@ function FlashBox() {
   );
 }
 export default function Chrome({ children }) {
-  const { ready } = useStore();
+  useStore();
   const { user: authUser, signOut: authSignOut } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
@@ -84,7 +87,7 @@ export default function Chrome({ children }) {
   const [navVisible, setNavVisible] = useState(true);
   const lastScrollY = useRef(0);
   const page = pageKey(pathname);
-  const u = authUser || (ready ? Store.currentUser() : null);
+  const u = authUser;
   const cur = (p) => (p === page ? "page" : undefined);
   useEffect(() => setOpen(false), [pathname]);
 
@@ -106,7 +109,6 @@ export default function Chrome({ children }) {
   const signOut = async () => {
     await authSignOut();
     Store.signOut();
-    flash("You're signed out.");
     router.push("/");
   };
   let account;
@@ -130,11 +132,11 @@ export default function Chrome({ children }) {
     account = (
       <>
         <li>
-          <Link href="/dashboard" className="nav-user" aria-current={cur("dashboard")}>
+            <Link href="/dashboard" className="nav-user" aria-current={cur("dashboard")}>
             <span className={"flame-pill " + (s ? "" : "off")} title="Your streak">
               🔥 {s}
             </span>{" "}
-            My dashboard
+            Dashboard
           </Link>
         </li>
         <li>
@@ -164,26 +166,12 @@ export default function Chrome({ children }) {
             scried<i>.</i>
           </Link>
           <ul className={"nav-links" + (open ? " open" : "")} id="nav-links">
-            <li>
-              <Link href="/opportunities" aria-current={cur("opportunities")}>
-                Opportunities
-              </Link>
-            </li>
-            <li>
-              <Link href="/sessions" aria-current={cur("sessions")}>
-                Our sessions
-              </Link>
-            </li>
-            <li>
-              <Link href="/stories" aria-current={cur("stories")}>
-                Blog
-              </Link>
-            </li>
-            <li>
-              <Link href="/partner" aria-current={cur("partner")}>
-                Partner with us
-              </Link>
-            </li>
+            {u ? (
+              <li><Link href="/opportunities" aria-current={cur("opportunities")}>Opportunities</Link></li>
+            ) : null}
+            <li><Link href="/stories" aria-current={cur("blogs")}>Blogs</Link></li>
+            <li><Link href="/partner" aria-current={cur("partner")}>Partner with us</Link></li>
+            <li><Link href="/sessions" aria-current={cur("programs")}>Programs</Link></li>
             {account}
           </ul>
           <button className={`nav-profile${open ? " is-open" : ""}`} type="button" aria-label="Open navigation menu" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
@@ -217,10 +205,10 @@ export default function Chrome({ children }) {
                     <Link href="/opportunities">Opportunities</Link>
                   </li>
                   <li>
-                    <Link href="/sessions">Our sessions</Link>
+                    <Link href="/sessions">Programs</Link>
                   </li>
                   <li>
-                    <Link href="/stories">Blog</Link>
+                    <Link href="/stories">Blogs</Link>
                   </li>
                   <li>
                     <Link href="/partner">Partner with us</Link>

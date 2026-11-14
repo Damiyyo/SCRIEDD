@@ -16,7 +16,15 @@ export default function OpportunityPage({ id }) {
   const u = ready ? Store.currentUser() : null;
   let card = null;
   if (o) {
-    if (app) {
+    if (o.externalUnverified && o.link) {
+      card = (
+        <>
+          <h2>External listing — not verified</h2>
+          <p>Scried has not confirmed this opening or its application page. Verify it directly with {o.org.split(" (listing via")[0]} before sharing personal details. Never pay a recruitment or application fee.</p>
+          <a className="btn btn-gold" href={o.link} target="_blank" rel="noopener noreferrer">Open external listing</a>
+        </>
+      );
+    } else if (app) {
       card = (
         <>
           <h2>You&apos;re registered</h2>
@@ -44,7 +52,8 @@ export default function OpportunityPage({ id }) {
       card = (
         <>
           <h2>This one has closed</h2>
-          <p>Join Scried so you hear about the next one first.</p>
+          <p>The listed registration deadline has passed. Check the official page in case the organiser has extended registration.</p>
+          {o.link ? <a className="btn btn-gold" href={o.link} target="_blank" rel="noreferrer">Check the official page</a> : null}
         </>
       );
     } else {
@@ -82,7 +91,7 @@ export default function OpportunityPage({ id }) {
                 <span className="gold">{Store.typeLabel(o.type)}</span>
                 <span>{o.org}</span>
                 <span>{Store.dueLabel(o)}</span>
-                {o.verified ? <span>✓ Verified by Scried</span> : null}
+                {o.verified ? <span>✓ Verified by Scried</span> : o.externalUnverified ? <span>Not verified by Scried</span> : null}
               </>
             ) : null}
           </div>

@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
  * then fades away into the site. It lives in the root layout, so it plays once each time the
  * site is opened or refreshed, not on every page change.
  */
-export const SPLASH_MS = 5000;
-const FADE_MS = 600;
+export const SPLASH_MS = 900;
+const FADE_MS = 350;
 
 export default function Splash() {
   const [phase, setPhase] = useState("in"); // in -> out -> gone

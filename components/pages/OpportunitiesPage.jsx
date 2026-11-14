@@ -11,7 +11,7 @@ function List({ initialType, initialQ }) {
   const used = new Set(Store.listOpps().map((o) => o.type));
   const types = [["", "All"], ...SCRIED_TYPES.filter(([k]) => used.has(k)).map(([k, l]) => [k, l])];
   const mine = new Set(Store.myApps().map((a) => a.opp));
-  const items = Store.listOpps({ q, type });
+  const items = Store.listOpps({ q, type, includeClosed: true }).filter((o) => Store.isOpen(o) || o.id === "idice-skills-to-job-south-east");
   // keep the address bar in step with the filters, as the original did
   const sync = (nextQ, nextType) => {
     const p = new URLSearchParams();
@@ -80,7 +80,7 @@ function List({ initialType, initialQ }) {
         ))}
       </nav>
       <p id="count" style={{ color: "var(--muted)", margin: "28px 0 14px" }} aria-live="polite">
-        {items.length ? `${items.length} open opportunit${items.length === 1 ? "y" : "ies"}, closing soonest first` : ""}
+        {items.length ? `${items.length} opportunit${items.length === 1 ? "y" : "ies"}, closing soonest first` : ""}
       </p>
       <ul className="opp-list" id="list">
         {items.map((o) => (
@@ -113,7 +113,7 @@ function Notes() {
       <div>
         <h3 style={{ fontSize: "1.35rem", marginBottom: 8 }}>Checked before it&apos;s posted</h3>
         <p style={{ color: "var(--muted)" }}>
-          Someone on our team confirms every listing against the official source. You only see ✓ Verified when we have.
+          We review listings against official sources. A ✓ Verified label means our team has confirmed the listing; items without that label may still need checking.
         </p>
       </div>
       <div>
@@ -132,20 +132,28 @@ function Notes() {
     </div>
   );
 }
-export default function OpportunitiesPage({ type = "", q = "" }) {
+export default function OpportunitiesPage({ type = "", q = "", onboarding = false }) {
   const { ready } = useStore();
   return (
     <>
-      <header className="page-head">
+      <header className="page-head opportunities-page-head">
         <div className="wrap">
           <h1>Opportunities, closer to you.</h1>
           <p>
-            Scholarships, internships, fellowships, competitions, grants and free tools for Nigerian students. Checked by us, in one place, before the
-            deadline.
+            Scholarships, internships, fellowships, competitions, grants, jobs and free tools for Nigerian students. Look for the Verified label, and check unverified external listings before sharing personal information.
           </p>
         </div>
       </header>
       <main id="main">{ready ? <List initialType={type} initialQ={q} /> : <div className="wrap" style={{ paddingTop: 36 }} />}</main>
+      {onboarding && (
+        <aside className="wrap onboarding-opportunity-step" aria-label="Profile setup complete">
+          <div>
+            <p className="eyebrow">Profile updated</p>
+            <p>Your profile is ready. Explore the opportunities above, or skip this step and go to your dashboard.</p>
+          </div>
+          <Link className="btn btn-line-dark" href="/dashboard">Skip for now</Link>
+        </aside>
+      )}
     </>
   );
 }

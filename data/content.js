@@ -83,7 +83,7 @@ export const SCRIED_OPPORTUNITIES = [
     eligibility: "Students aged 18 and above, currently enrolled at an accredited Nigerian university, polytechnic or college of education",
     location: "Nigeria",
     deadline: null,
-    link: "https://gemini.google.com/students",
+    link: "https://gemini.google/students/?utm_source=Uber&utm_medium=paid_media&utm_campaign=students_shortlink_social-uk",
     steps: [
       "Sign in with a personal Gmail you'll keep after school.",
       "Verify that you're a student. Google uses SheerID: enter your school and your name exactly as they appear on your school records.",
@@ -94,43 +94,102 @@ export const SCRIED_OPPORTUNITIES = [
     verified: true,
     certificate: false,
     partner: "Google for Education, Nigeria"
-  }
-];
-/* Sample opportunities, only added when demo data is loaded. Delete before launch. */
-export const SCRIED_SAMPLE_OPPORTUNITIES = [
-  {
-    id: "sample-solar-bootcamp",
-    sample: true,
-    title: "Sample: Solar installation bootcamp",
-    org: "Sample training partner",
-    type: "training",
-    summary: "Sample listing to show how trainings appear. Delete before launch.",
-    description: ["This is a sample opportunity created for the prototype demo.", "Delete it from the staff pages before launch."],
-    eligibility: "Engineering students",
-    location: "Ogun State",
-    deadlineInDays: 6,
-    link: "https://example.com",
-    steps: ["Fill the official form.", "Attend the orientation."],
-    verified: false,
-    certificate: true,
-    partner: ""
   },
   {
-    id: "sample-data-internship",
-    sample: true,
-    title: "Sample: Data analysis internship",
-    org: "Sample company",
-    type: "internship",
-    summary: "Sample listing to show how internships appear. Delete before launch.",
-    description: ["This is a sample opportunity created for the prototype demo.", "Delete it from the staff pages before launch."],
-    eligibility: "300 level and above, any numerate course",
-    location: "Port Harcourt / Hybrid",
-    deadlineInDays: 24,
-    link: "https://example.com",
-    steps: ["Apply on the company site."],
+    id: "idice-skills-to-job-south-east",
+    title: "iDICE Skills to Job — South East Program",
+    org: "African Development Bank and Bank of Industry",
+    type: "training",
+    summary: "Skills training and potential part-time or full-time job opportunities for participants in the South East.",
+    description: [
+      "The iDICE Skills to Job — South East Program is sponsored by the African Development Bank and Bank of Industry.",
+      "Program benefits include well-equipped student training hubs, potential part-time or full-time job opportunities, and international linkage with global technology companies. Stipends may apply; terms and conditions apply.",
+      "The listed registration deadline was 5 November 2026. This date has passed, so check the official page for any extension or updated registration details."
+    ],
+    eligibility: "Students interested in skills training and job opportunities in Nigeria’s South East region",
+    location: "South East, Nigeria",
+    deadline: "2026-11-05",
+    link: "https://www.activityinfo.org/c/cif8rkemseissxrud/946930",
+    steps: ["Open the official registration page and check whether registration is still available."],
     verified: false,
-    certificate: true,
-    partner: ""
+    certificate: false,
+    partner: "Sponsored by the African Development Bank and Bank of Industry"
+  },
+  {
+    id: "coalition-remote-office-assistant",
+    title: "Remote Office Assistants",
+    org: "Coalition Technologies (listing via Dixcover Hub)",
+    type: "job",
+    summary: "Remote, full-time roles with flexible hours. The listing reports pay of $15–$25 per hour.",
+    description: [
+      "This external job listing was supplied to Scried and has not been independently verified. It describes multiple remote, full-time office assistant openings paying $15–$25 per hour.",
+      "The application page is hosted on jobs.smartyacad.com (Dixcover Hub), not Coalition Technologies’ official careers domain. Confirm the opening directly with the employer before sharing personal or financial information. Never pay an application or recruitment fee."
+    ],
+    eligibility: "Not confirmed by Scried. Review the external listing and confirm requirements with the employer.",
+    location: "Remote; the listing says worldwide",
+    deadline: null,
+    link: "https://jobs.smartyacad.com/remote-office-assistants-needed-at-coalition-tech/",
+    steps: ["Verify the opening on Coalition Technologies’ official careers site before applying.", "Do not pay a fee or provide banking details to apply."],
+    verified: false,
+    externalUnverified: true,
+    certificate: false
+  },
+  {
+    id: "coalition-remote-ui-ux-designer",
+    title: "UI/UX Designers",
+    org: "Coalition Technologies (listing via Dixcover Hub)",
+    type: "job",
+    summary: "Remote, full-time roles worldwide. The listing reports pay of $15–$35 per hour.",
+    description: [
+      "This external job listing was supplied to Scried and has not been independently verified. The attached listing calls these UI/UX Designer roles; the linked page describes remote web designer openings paying $15–$35 per hour.",
+      "The application page is hosted on jobs.smartyacad.com (Dixcover Hub), not Coalition Technologies’ official careers domain. Confirm the opening directly with the employer before sharing personal or financial information. Never pay an application or recruitment fee."
+    ],
+    eligibility: "Not confirmed by Scried. Review the external listing and confirm requirements with the employer.",
+    location: "Remote worldwide",
+    deadline: null,
+    link: "https://jobs.smartyacad.com/remote-web-designers-needed-at-coalition-tech/",
+    steps: ["Verify the opening on Coalition Technologies’ official careers site before applying.", "Do not pay a fee or provide banking details to apply."],
+    verified: false,
+    externalUnverified: true,
+    certificate: false
+  },
+  {
+    id: "coalition-remote-frontend-developer",
+    title: "Frontend Developers",
+    org: "Coalition Technologies (listing via Dixcover Hub)",
+    type: "job",
+    summary: "Remote, full-time roles with flexible hours. The listing reports pay of $45,000 per year.",
+    description: [
+      "This external job listing was supplied to Scried and has not been independently verified. It describes remote, full-time Frontend Developer roles paying $45,000 per year.",
+      "The application page is hosted on jobs.smartyacad.com (Dixcover Hub), not Coalition Technologies’ official careers domain. Confirm the opening directly with the employer before sharing personal or financial information. Never pay an application or recruitment fee."
+    ],
+    eligibility: "Not confirmed by Scried. Review the external listing and confirm requirements with the employer.",
+    location: "Remote; the listing says worldwide",
+    deadline: null,
+    link: "https://jobs.smartyacad.com/remote-frontend-developers-needed-at-coalition-tech/",
+    steps: ["Verify the opening on Coalition Technologies’ official careers site before applying.", "Do not pay a fee or provide banking details to apply."],
+    verified: false,
+    externalUnverified: true,
+    certificate: false
+  },
+  {
+    id: "coalition-remote-social-media-manager",
+    title: "Social Media Manager",
+    org: "Coalition Technologies (listing via Dixcover Hub)",
+    type: "job",
+    summary: "Remote, full-time role with flexible hours. The listing reports pay of $17–$35 per hour.",
+    description: [
+      "This external job listing was supplied to Scried and has not been independently verified. It describes a remote, full-time Social Media Manager role paying $17–$35 per hour.",
+      "The application page is hosted on jobs.smartyacad.com (Dixcover Hub), not Coalition Technologies’ official careers domain. Confirm the opening directly with the employer before sharing personal or financial information. Never pay an application or recruitment fee."
+    ],
+    eligibility: "Not confirmed by Scried. Review the external listing and confirm requirements with the employer.",
+    location: "Remote; the listing says worldwide",
+    deadline: null,
+    link: "https://jobs.smartyacad.com/remote-social-media-manager-needed-at-coalition-tech/",
+    steps: ["Verify the opening on Coalition Technologies’ official careers site before applying.", "Do not pay a fee or provide banking details to apply."],
+    verified: false,
+    externalUnverified: true,
+    certificate: false
   }
 ];
 /* Programs Scried has delivered.

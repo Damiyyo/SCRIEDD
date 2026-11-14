@@ -2,12 +2,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { useRequireUser } from "@/lib/hooks";
+import { useRequireUser, useStore } from "@/lib/hooks";
 import { Store } from "@/lib/store";
 import { alertBox, first, flash, flashNow, fmtDate, openCertificate } from "@/lib/ui";
 const MILESTONES = [3, 7, 14, 30, 60, 100];
 export default function DashboardPage() {
   const u = useRequireUser();
+  useStore();
   const router = useRouter();
   const toggle = async (a, back, e) => {
     const t = e.target;
@@ -48,6 +49,8 @@ export default function DashboardPage() {
       </>
     );
   }
+  const profile = u.profile || {};
+  const profileComplete = [u.full_name, profile.whatsapp_number, profile.school_name, profile.state, profile.course, profile.level, profile.age_range].every(Boolean);
   const s = Store.streak(u.id),
     best = Store.longestStreak(u.id),
     doneToday = Store.todayLog(u.id).length;
@@ -57,8 +60,8 @@ export default function DashboardPage() {
     fin = apps.filter((a) => a.status !== "applied");
   const opp = (a) => Store.getOpp(a.opp) || { title: "Removed opportunity", org: "", id: a.opp, link: "", certificate: false };
   const applied = new Set(apps.map((a) => a.opp));
-  const rec = Store.listOpps()
-    .filter((o) => !applied.has(o.id))
+  const rec = Store.listOpps({ includeClosed: true })
+    .filter((o) => (Store.isOpen(o) || o.id === "idice-skills-to-job-south-east") && !applied.has(o.id))
     .slice(0, 4);
   return (
     <>
@@ -73,7 +76,7 @@ export default function DashboardPage() {
                   ? `Do one thing today to keep your ${s}-day streak going.`
                   : "Start a streak today: explore one opportunity or read one story."}
             </p>
-            <p className="sub" id="finish" style={{ marginTop: 8 }} hidden={Store.profileComplete(u)}>
+            <p className="sub" id="finish" style={{ marginTop: 8 }} hidden={profileComplete}>
               <Link href="/profile">Finish your profile</Link> so applications fill in automatically.
             </p>
           </div>
@@ -94,10 +97,10 @@ export default function DashboardPage() {
             </div>
             <div className="week" id="week" aria-label="This week">
               {Store.week(u.id).map((d) => (
-                <div className={`day ${d.done ? "done" : ""} ${d.today ? "today" : ""} ${d.future ? "future" : ""}`} key={d.day}>
+                <div className={`day ${d.done ? "done" : ""} ${d.missed ? "missed" : ""} ${d.today ? "today" : ""} ${d.future ? "future" : ""}`} key={d.day}>
                   <span>{d.label}</span>
-                  <span className="dot" title={`${fmtDate(d.day, { weekday: "long", day: "numeric", month: "short" })}${d.done ? ": done" : ""}`}>
-                    {d.done ? "✓" : ""}
+                  <span className="dot" aria-label={`${fmtDate(d.day, { weekday: "long", day: "numeric", month: "short" })}: ${d.done ? "completed" : d.missed ? "missed" : d.today ? "today" : "upcoming"}`} title={`${fmtDate(d.day, { weekday: "long", day: "numeric", month: "short" })}: ${d.done ? "completed" : d.missed ? "missed" : d.today ? "today" : "upcoming"}`}>
+                    {d.done ? "✓" : d.missed ? "×" : ""}
                   </span>
                 </div>
               ))}
@@ -270,18 +273,20 @@ export default function DashboardPage() {
           ) : null}
           <div className="side-card">
             <h3>Your details</h3>
-            <p id="details">
-              {u.fullName}
-              <br />
-              {Store.schoolName(u)}
-              <br />
-              {u.course || "Course not set"}
-              {u.level ? " · " + Store.levelLabel(u.level) : ""}
-              <br />
-              <Link href="/certificates" style={{ color: "var(--forest)", fontWeight: 600 }}>
-                My certificates →
-              </Link>
-            </p>
+            <dl className="profile-details" id="details">
+              <div><dt>Full name</dt><dd>{u.full_name || u.fullName}</dd></div>
+              <div><dt>WhatsApp</dt><dd>{profile.whatsapp_number || "Not added"}</dd></div>
+              <div><dt>School</dt><dd>{profile.school_name || "Not added"}</dd></div>
+              <div><dt>State</dt><dd>{profile.state || "Not added"}</dd></div>
+              <div><dt>Faculty</dt><dd>{profile.faculty || "Not added"}</dd></div>
+              <div><dt>Department</dt><dd>{profile.department || "Not added"}</dd></div>
+              <div><dt>Course</dt><dd>{profile.course || "Not added"}</dd></div>
+              <div><dt>Level</dt><dd>{profile.level ? Store.levelLabel(profile.level) : "Not added"}</dd></div>
+              <div><dt>Age range</dt><dd>{profile.age_range ? Store.ageLabel(profile.age_range) : "Not added"}</dd></div>
+              <div><dt>Matric number</dt><dd>{profile.matriculation_number || "Not added"}</dd></div>
+              <div><dt>Interests</dt><dd>{profile.interests?.length ? profile.interests.join(", ") : "Not added"}</dd></div>
+            </dl>
+            <Link href="/certificates" style={{ color: "var(--forest)", fontWeight: 600 }}>My certificates →</Link>
             <Link className="btn btn-line-dark" href="/profile">
               Edit profile
             </Link>

@@ -16,12 +16,17 @@ export function OppRow({ o, mine }) {
           </h3>
           <p className="opp-org">
             {o.org}
-            {o.verified && (
+            {o.verified ? (
               <>
                 {" · "}
                 <span className="ver">✓ Verified by Scried</span>
               </>
-            )}
+            ) : o.externalUnverified ? (
+              <>
+                {" · "}
+                <span className="unverified">Not verified by Scried</span>
+              </>
+            ) : null}
             {mine.has(o.id) && (
               <>
                 {" · "}
